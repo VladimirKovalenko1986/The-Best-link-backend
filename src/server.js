@@ -1,8 +1,8 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import { env } from './utils/env.js';
-import { getAllLinks, getLinkById } from './services/links.js';
+import env from './utils/env.js';
+import { getAllLinks, getLinkById } from './services/links-services.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -21,27 +21,41 @@ const startServer = () => {
   );
 
   app.get('/links', async (req, res) => {
-    const links = await getAllLinks();
+    const result = await getAllLinks();
 
-    res.status(200).json({
-      data: links,
+    res.json({
+      status: 200,
+      data: result,
+      message: 'Success found links',
     });
   });
 
   app.get('/links/:linkById', async (req, res) => {
-    const { linkById } = req.params;
-    const link = await getLinkById(linkById);
+    try {
+      const { linkById } = req.params;
 
-    if (!link) {
-      res.status(404).json({
-        message: 'Link not found!',
+      const result = await getLinkById(linkById);
+
+      if (!result) {
+        res.status(404).json({
+          message: `Link with id=${linkById} not found`,
+        });
+        return;
+      }
+      res.json({
+        status: 200,
+        data: result,
+        message: `Link with id=${linkById} find success`,
       });
-      return;
+    } catch (error) {
+      if (error.message.includes('Cast to ObjectId failed')) {
+        error.status = 404;
+      }
+      const { status = 500 } = error;
+      res.status(status).json({
+        message: error.message,
+      });
     }
-
-    res.status(200).json({
-      data: link,
-    });
   });
 
   app.use('*', (req, res, next) => {

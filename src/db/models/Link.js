@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-const linksSchema = new Schema(
+const linkSchema = new Schema(
   {
     nameType: {
       type: String,
@@ -30,6 +30,6 @@ const linksSchema = new Schema(
   },
 );
 
-const linksCollection = model('links', linksSchema);
+const Link = model('link', linkSchema);
 
-export { linksCollection };
+export { Link };

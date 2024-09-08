@@ -12,4 +12,4 @@ function env(name, defaultValue) {
   throw new Error(`Missing: process.env['${name}'].`);
 }
 
-export { env };
+export default env;
