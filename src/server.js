@@ -2,7 +2,9 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import env from './utils/env.js';
-import { getAllLinks, getLinkById } from './services/links-services.js';
+import linksRouter from './routers/links-router.js';
+import errorHandler from './middlewares/errorHandler.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -20,56 +22,11 @@ const startServer = () => {
     }),
   );
 
-  app.get('/links', async (req, res) => {
-    const result = await getAllLinks();
+  app.use(linksRouter);
 
-    res.json({
-      status: 200,
-      data: result,
-      message: 'Success found links',
-    });
-  });
+  app.use('*', notFoundHandler);
 
-  app.get('/links/:linkById', async (req, res) => {
-    try {
-      const { linkById } = req.params;
-
-      const result = await getLinkById(linkById);
-
-      if (!result) {
-        res.status(404).json({
-          message: `Link with id=${linkById} not found`,
-        });
-        return;
-      }
-      res.json({
-        status: 200,
-        data: result,
-        message: `Link with id=${linkById} find success`,
-      });
-    } catch (error) {
-      if (error.message.includes('Cast to ObjectId failed')) {
-        error.status = 404;
-      }
-      const { status = 500 } = error;
-      res.status(status).json({
-        message: error.message,
-      });
-    }
-  });
-
-  app.use('*', (req, res, next) => {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  });
-
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
