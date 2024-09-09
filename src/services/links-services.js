@@ -2,7 +2,7 @@ import { Link } from '../db/models/Link.js';
 
 const getAllLinks = () => Link.find();
 
-const getLinkById = (linkById) => Link.findById(linkById);
+const getLinkById = (linkId) => Link.findById(linkId);
 
 const createLink = async (payload) => {
   const link = await Link.create(payload);

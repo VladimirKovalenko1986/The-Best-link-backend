@@ -13,7 +13,7 @@ const router = Router();
 
 router.get('/links', ctrlWrapper(getLinksController));
 
-router.get('/links/:linkById', ctrlWrapper(getLinkByIdController));
+router.get('/links/:linkId', ctrlWrapper(getLinkByIdController));
 
 router.post('/links', ctrlWrapper(createLinkController));
 
