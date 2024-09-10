@@ -4,18 +4,12 @@ const getAllLinks = () => Link.find();
 
 const getLinkById = (linkId) => Link.findById(linkId);
 
-const createLink = async (payload) => {
-  const link = await Link.create(payload);
-  return link;
-};
+const createLink = async (payload) => Link.create(payload);
 
-const deleteLink = async (linkId) => {
-  const link = await Link.findOneAndDelete({
+const deleteLink = (linkId) =>
+  Link.findOneAndDelete({
     _id: linkId,
   });
-
-  return link;
-};
 
 const updateLink = async (linkId, payload, options = {}) => {
   const rawResult = await Link.findOneAndUpdate({ _id: linkId }, payload, {

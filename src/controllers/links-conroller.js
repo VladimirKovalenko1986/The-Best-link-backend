@@ -55,6 +55,7 @@ const deleteLinkController = async (req, res, next) => {
   res.json({
     status: 204,
     messag: `Link ${linkId} delete`,
+    data: result,
   });
 };
 
@@ -71,10 +72,11 @@ const upsertLinkController = async (req, res, next) => {
   }
 
   const status = result.isNew ? 201 : 200;
+  const message = result.isNew ? 'Link success add' : 'Link success update';
 
   res.json({
     status,
-    message: 'Successfully upserted a link',
+    message,
     data: result.link,
   });
 };
