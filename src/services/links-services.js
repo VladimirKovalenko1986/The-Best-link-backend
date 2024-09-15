@@ -7,18 +7,35 @@ const getAllLinks = async ({
   perPage = 10,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
+  filter = {},
 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
   const linksQuery = Link.find();
-  const linksCount = await Link.find().merge(linksQuery).countDocuments();
 
-  const links = await linksQuery
-    .skip(skip)
-    .limit(limit)
-    .sort({ [sortBy]: sortOrder })
-    .exec();
+  if (filter.nameType) {
+    linksQuery.where('nameType').equals(filter.nameType);
+  }
+
+  // * Це асинхронний метод
+  //   const linksCount = await Link.find().merge(linksQuery).countDocuments();
+
+  //   const links = await linksQuery
+  //     .skip(skip)
+  //     .limit(limit)
+  //     .sort({ [sortBy]: sortOrder })
+  //     .exec();
+
+  // * Це синхронний метода
+  const [linksCount, links] = await Promise.all([
+    Link.find().merge(linksQuery).countDocuments(),
+    linksQuery
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
 
   const paginationData = calculatePaginationData(linksCount, perPage, page);
 
@@ -39,7 +56,6 @@ const deleteLink = (linkId) =>
 
 const updateLink = async (linkId, payload, options = {}) => {
   const rawResult = await Link.findOneAndUpdate({ _id: linkId }, payload, {
-    new: true,
     includeResultMetadata: true,
     ...options,
   });

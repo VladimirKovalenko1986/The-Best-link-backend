@@ -3,4 +3,6 @@ const SORT_ORDER = {
   DESC: 'desc',
 };
 
-export { SORT_ORDER };
+const nameType = ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js'];
+
+export { SORT_ORDER, nameType };

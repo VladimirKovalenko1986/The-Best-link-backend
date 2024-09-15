@@ -6,6 +6,7 @@ import {
   updateLink,
 } from '../services/links-services.js';
 import parsePaginationParams from '../utils/parsePaginationParams.js';
+import parseFilterParams from '../utils/parseFilterParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import createHttpError from 'http-errors';
 
@@ -14,11 +15,14 @@ const getLinksController = async (req, res) => {
 
   const { sortBy, sortOrder } = parseSortParams(req.query);
 
+  const filter = parseFilterParams(req.query);
+
   const result = await getAllLinks({
     page,
     perPage,
     sortBy,
     sortOrder,
+    filter,
   });
 
   res.json({

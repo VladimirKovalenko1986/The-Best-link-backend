@@ -1,8 +1,9 @@
 import Joi from 'joi';
+import { nameType } from '../constants/index.js';
 
 const createLinkSchema = Joi.object({
   nameType: Joi.string()
-    .valid('HTML', 'JS', 'React', 'TS', 'Node.js')
+    .valid(...nameType)
     .required(),
   link: Joi.string().required(),
   nameLink: Joi.string().required(),
@@ -10,7 +11,7 @@ const createLinkSchema = Joi.object({
 });
 
 const updateLinkSchema = Joi.object({
-  nameType: Joi.string().valid('HTML', 'JS', 'React', 'TS', 'Node.js'),
+  nameType: Joi.string().valid(...nameType),
   link: Joi.string(),
   nameLink: Joi.string(),
   textLink: Joi.string(),

@@ -1,11 +1,13 @@
 import { model, Schema } from 'mongoose';
+import { nameType } from '../../constants/index.js';
+import { mongooseSaveError, setUpdateSettigs } from './hooks.js';
 
 const linkSchema = new Schema(
   {
     nameType: {
       type: String,
       required: true,
-      enum: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js'],
+      enum: nameType,
     },
 
     link: {
@@ -29,6 +31,10 @@ const linkSchema = new Schema(
     versionKey: false,
   },
 );
+
+linkSchema.post('save', mongooseSaveError);
+linkSchema.pre('findOneAndUpdate', setUpdateSettigs);
+linkSchema.post('findOneAndUpdate', mongooseSaveError);
 
 const Link = model('link', linkSchema);
 
