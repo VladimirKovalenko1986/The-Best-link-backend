@@ -14,27 +14,27 @@ import isValidId from '../middlewares/isValidId.js';
 
 const router = Router();
 
-router.get('/links', ctrlWrapper(getLinksController));
+router.get('/', ctrlWrapper(getLinksController));
 
-router.get('/links/:linkId', isValidId, ctrlWrapper(getLinkByIdController));
+router.get('/:linkId', isValidId, ctrlWrapper(getLinkByIdController));
 
 router.post(
-  '/links',
+  '/',
   validateBody(createLinkSchema),
   ctrlWrapper(createLinkController),
 );
 
-router.delete('/links/:linkId', isValidId, ctrlWrapper(deleteLinkController));
+router.delete('/:linkId', isValidId, ctrlWrapper(deleteLinkController));
 
 router.put(
-  '/links/:linkId',
+  '/:linkId',
   isValidId,
   validateBody(updateLinkSchema),
   ctrlWrapper(upsertLinkController),
 );
 
 router.patch(
-  '/links/:linkId',
+  '/:linkId',
   isValidId,
   validateBody(updateLinkSchema),
   ctrlWrapper(patchLinkController),
