@@ -1,7 +1,8 @@
 import { model, Schema } from 'mongoose';
 import { authEmailFormate } from '../../constants/index.js';
+import { mongooseSaveError, setUpdateSettigs } from './hooks.js';
 
-const usersSchema = new Schema(
+const userSchema = new Schema(
   {
     name: { type: String, required: true },
     email: {
@@ -18,12 +19,16 @@ const usersSchema = new Schema(
   },
 );
 
-usersSchema.methods.toJSON = function () {
+userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   return obj;
 };
 
-const User = model('user', usersSchema);
+userSchema.post('save', mongooseSaveError);
+userSchema.pre('findOneAndUpdate', setUpdateSettigs);
+userSchema.post('findOneAndUpdate', mongooseSaveError);
+
+const User = model('users', userSchema);
 
 export { User };

@@ -4,6 +4,7 @@ import { User } from '../db/models/User.js';
 import createHttpError from 'http-errors';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
 import { Sessions } from '../db/models/Session.js';
+import createSession from './createSession.js';
 
 const registerUser = async (payload) => {
   const user = await User.findOne({
@@ -40,32 +41,17 @@ const loginUser = async (payload) => {
   await Sessions.deleteOne({
     userId: user._id,
   });
-  const accessToken = randomBytes(30).toString('base64');
-  const refreshToken = randomBytes(30).toString('base64');
+
+  const newSession = createSession();
 
   return await Sessions.create({
     userId: user._id,
-    accessToken,
-    refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    ...newSession,
   });
 };
 
 const logoutUser = async (sessionId) => {
   await Sessions.deleteOne({ _id: sessionId });
-};
-
-const createSession = () => {
-  const accessToken = randomBytes(30).toString('base64');
-  const refreshToken = randomBytes(30).toString('base64');
-
-  return {
-    accessToken,
-    refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
-  };
 };
 
 const refreshUsersSession = async ({ sessionId, refreshToken }) => {
@@ -86,12 +72,24 @@ const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 
   const newSession = createSession();
 
-  await Sessions.deleteOne({ _id: sessionId, refreshToken });
+  //   await Sessions.deleteOne({ _id: sessionId, refreshToken });
 
-  return await Sessions.create({
-    userId: session.userId,
-    ...newSession,
-  });
+  //   return await Sessions.create({
+  //     userId: session.userId,
+  //     ...newSession,
+  //   });
+
+  // * Для паралельного застосування
+
+  await Promise.all([
+    Sessions.deleteOne({ _id: sessionId, refreshToken }),
+    Sessions.create({
+      userId: session.userId,
+      ...newSession,
+    }),
+  ]);
+
+  return newSession;
 };
 
 export { registerUser, loginUser, logoutUser, refreshUsersSession };

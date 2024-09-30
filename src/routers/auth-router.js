@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
+import validateBody from '../middlewares/validateBody.js';
 import { registerUserSchema, loginUserSchema } from '../validation/auth.js';
 import {
   registerUserController,
@@ -7,7 +8,6 @@ import {
   logoutUserController,
   refreshUserSessionController,
 } from '../controllers/auth-controller.js';
-import validateBody from '../middlewares/validateBody.js';
 
 const router = Router();
 
