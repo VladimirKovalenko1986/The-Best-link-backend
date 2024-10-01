@@ -14,6 +14,10 @@ const getAllLinks = async ({
 
   const linksQuery = Link.find();
 
+  if (filter.userId) {
+    linksQuery.where('userId').equals(filter.userId);
+  }
+
   if (filter.nameType) {
     linksQuery.where('nameType').equals(filter.nameType);
   }
@@ -45,7 +49,7 @@ const getAllLinks = async ({
   };
 };
 
-const getLinkById = (linkId) => Link.findById(linkId);
+const getLink = (filter) => Link.findOne(filter);
 
 const createLink = async (payload) => Link.create(payload);
 
@@ -54,18 +58,20 @@ const deleteLink = (linkId) =>
     _id: linkId,
   });
 
-const updateLink = async (linkId, payload, options = {}) => {
-  const rawResult = await Link.findOneAndUpdate({ _id: linkId }, payload, {
-    includeResultMetadata: true,
+const updateLink = async (query, payload, options = {}) => {
+  const rawResult = await Link.findOneAndUpdate(query, payload, {
+    new: true,
     ...options,
   });
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!rawResult) return null;
 
   return {
-    link: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+    link: rawResult,
+    isNew: Boolean(options.upsert && !rawResult.isNew),
   };
 };
 
-export { getAllLinks, getLinkById, createLink, deleteLink, updateLink };
+const findById = (id) => Link.findOne(id);
+
+export { getAllLinks, getLink, createLink, deleteLink, updateLink, findById };

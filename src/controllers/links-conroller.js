@@ -1,9 +1,10 @@
 import {
   getAllLinks,
-  getLinkById,
+  getLink,
   createLink,
   deleteLink,
   updateLink,
+  findById,
 } from '../services/links-services.js';
 import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseFilterParams from '../utils/parseFilterParams.js';
@@ -11,11 +12,12 @@ import parseSortParams from '../utils/parseSortParams.js';
 import createHttpError from 'http-errors';
 
 const getLinksController = async (req, res) => {
+  const { _id: userId } = req.user;
   const { page, perPage } = parsePaginationParams(req.query);
 
   const { sortBy, sortOrder } = parseSortParams(req.query);
 
-  const filter = parseFilterParams(req.query);
+  const filter = { ...parseFilterParams(req.query), userId };
 
   const result = await getAllLinks({
     page,
@@ -33,22 +35,24 @@ const getLinksController = async (req, res) => {
 };
 
 const getLinkByIdController = async (req, res, next) => {
-  const { linkId } = req.params;
-  const result = await getLinkById(linkId);
+  const { _id: userId } = req.user;
+  const { linkId: _id } = req.params;
+  const result = await getLink({ _id, userId });
 
   if (!result) {
-    throw createHttpError(404, `Link width id=${linkId} not found`);
+    throw createHttpError(404, `Link width id=${_id} not found`);
   }
 
   res.json({
     status: 200,
     data: result,
-    message: `Link width id=${linkId} find success`,
+    message: `Link width id=${_id} find success`,
   });
 };
 
 const createLinkController = async (req, res) => {
-  const result = await createLink(req.body);
+  const { _id: userId } = req.user;
+  const result = await createLink({ ...req.body, userId });
 
   res.json({
     status: 201,
@@ -58,31 +62,39 @@ const createLinkController = async (req, res) => {
 };
 
 const deleteLinkController = async (req, res, next) => {
-  const { linkId } = req.params;
+  const { _id: userId } = req.user;
+  const { linkId: _id } = req.params;
 
-  const result = await deleteLink(linkId);
+  const result = await deleteLink({ _id, userId });
 
   if (!result) {
-    next(createHttpError(404, `Link ${linkId} not found`));
+    next(createHttpError(404, `Link ${_id} not found`));
     return;
   }
 
   res.json({
     status: 204,
-    messag: `Link ${linkId} delete`,
+    message: `Link ${_id} delete`,
     data: result,
   });
 };
 
 const upsertLinkController = async (req, res, next) => {
-  const { linkId } = req.params;
+  const { _id: userId } = req.user;
+  const { linkId: _id } = req.params;
 
-  const result = await updateLink(linkId, req.body, {
+  const existingLink = await findById({ _id, userId });
+
+  if (!existingLink) {
+    return next(createHttpError(404, `Link with id ${_id} does not exist`));
+  }
+
+  const result = await updateLink({ _id, userId }, req.body, {
     upsert: true,
   });
 
   if (!result) {
-    next(createHttpError(404, `Link ${linkId} not found`));
+    next(createHttpError(404, `Link ${_id} not found`));
     return;
   }
 
@@ -97,11 +109,19 @@ const upsertLinkController = async (req, res, next) => {
 };
 
 const patchLinkController = async (req, res, next) => {
-  const { linkId } = req.params;
-  const result = await updateLink(linkId, req.body);
+  const { _id: userId } = req.user;
+  const { linkId: _id } = req.params;
+
+  const existingLink = await findById({ _id, userId });
+
+  if (!existingLink) {
+    return next(createHttpError(404, `Link with id ${_id} does not exist`));
+  }
+
+  const result = await updateLink({ _id, userId }, req.body);
 
   if (!result) {
-    next(createHttpError(404, `Link ${linkId} not found`));
+    next(createHttpError(404, `Link ${_id} not found`));
     return;
   }
 

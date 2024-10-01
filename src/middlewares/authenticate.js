@@ -31,14 +31,14 @@ const authenticate = async (req, res, next) => {
     new Date() > new Date(session.accessTokenValidUntil);
 
   if (isAccessTokenExpired) {
-    next(createHttpError(401, 'Access token expired'));
+    next(createHttpError(401, 'Access token time expired'));
     return;
   }
 
   const user = await User.findById(session.userId);
 
   if (!user) {
-    next(createHttpError(401));
+    next(createHttpError(401, 'User not found'));
     return;
   }
 

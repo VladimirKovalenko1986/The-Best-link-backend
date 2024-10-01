@@ -40,7 +40,10 @@ const loginUserController = async (req, res) => {
 
 const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
+    console.log('Logging out session with ID:', req.cookies.sessionId);
     await logoutUser(req.cookies.sessionId);
+  } else {
+    console.log('No session ID found in cookies.');
   }
 
   res.clearCookie('sessionId');

@@ -1,8 +1,6 @@
 import bcrypt from 'bcrypt';
-import { randomBytes } from 'crypto';
 import { User } from '../db/models/User.js';
 import createHttpError from 'http-errors';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
 import { Sessions } from '../db/models/Session.js';
 import createSession from './createSession.js';
 
@@ -72,24 +70,14 @@ const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 
   const newSession = createSession();
 
-  //   await Sessions.deleteOne({ _id: sessionId, refreshToken });
+  const createdSession = await Sessions.create({
+    userId: session.userId,
+    ...newSession,
+  });
 
-  //   return await Sessions.create({
-  //     userId: session.userId,
-  //     ...newSession,
-  //   });
+  await Sessions.deleteOne({ _id: sessionId, refreshToken });
 
-  // * Для паралельного застосування
-
-  await Promise.all([
-    Sessions.deleteOne({ _id: sessionId, refreshToken }),
-    Sessions.create({
-      userId: session.userId,
-      ...newSession,
-    }),
-  ]);
-
-  return newSession;
+  return createdSession;
 };
 
 export { registerUser, loginUser, logoutUser, refreshUsersSession };
