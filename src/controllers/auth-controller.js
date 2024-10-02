@@ -5,6 +5,7 @@ import {
   refreshUsersSession,
 } from '../services/auth-services.js';
 import { ONE_DAY } from '../constants/index.js';
+import createHttpError from 'http-errors';
 
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
@@ -43,16 +44,18 @@ const loginUserController = async (req, res) => {
 
 const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
-    console.log('Logging out session with ID:', req.cookies.sessionId);
     await logoutUser(req.cookies.sessionId);
   } else {
-    console.log('No session ID found in cookies.');
+    throw createHttpError(401, 'Session not found');
   }
 
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
 
-  res.status(204).send();
+  res.status(204).json({
+    status: 204,
+    message: 'User logout',
+  });
 };
 
 const refreshUserSessionController = async (req, res) => {
