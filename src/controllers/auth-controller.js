@@ -3,6 +3,8 @@ import {
   loginUser,
   logoutUser,
   refreshUsersSession,
+  requestResetToken,
+  resetPassword,
 } from '../services/auth-services.js';
 import { ONE_DAY } from '../constants/index.js';
 import createHttpError from 'http-errors';
@@ -52,10 +54,7 @@ const logoutUserController = async (req, res) => {
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
 
-  res.status(204).json({
-    status: 204,
-    message: 'User logout',
-  });
+  res.status(204).send();
 };
 
 const refreshUserSessionController = async (req, res) => {
@@ -75,9 +74,31 @@ const refreshUserSessionController = async (req, res) => {
   });
 };
 
+const requestResetEmailController = async (req, res) => {
+  await requestResetToken(req.body.email);
+
+  res.json({
+    message: 'Reset password email was successully sent!',
+    status: 200,
+    data: {},
+  });
+};
+
+const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+
+  res.json({
+    message: 'Password was successfully reset!',
+    status: 200,
+    data: {},
+  });
+};
+
 export {
   registerUserController,
   loginUserController,
   logoutUserController,
   refreshUserSessionController,
+  requestResetEmailController,
+  resetPasswordController,
 };
