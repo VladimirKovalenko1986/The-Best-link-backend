@@ -24,7 +24,6 @@ const SMTP = {
 const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
 
 // Другий варіант
-
 // const TEMPLATES_DIR = path.resolve('src', 'templates');
 
 export {
