@@ -12,6 +12,7 @@ import { createLinkSchema, updateLinkSchema } from '../validation/links.js';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import isValidId from '../middlewares/isValidId.js';
 import authenticate from '../middlewares/authenticate.js';
+import upload from '../middlewares/multer.js';
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.get('/:linkId', isValidId, ctrlWrapper(getLinkByIdController));
 
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(createLinkSchema),
   ctrlWrapper(createLinkController),
 );
@@ -31,6 +33,7 @@ router.delete('/:linkId', isValidId, ctrlWrapper(deleteLinkController));
 
 router.put(
   '/:linkId',
+  upload.single('photo'),
   isValidId,
   validateBody(updateLinkSchema),
   ctrlWrapper(upsertLinkController),
@@ -38,6 +41,7 @@ router.put(
 
 router.patch(
   '/:linkId',
+  upload.single('photo'),
   isValidId,
   validateBody(updateLinkSchema),
   ctrlWrapper(patchLinkController),

@@ -26,6 +26,12 @@ const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
 // Другий варіант
 // const TEMPLATES_DIR = path.resolve('src', 'templates');
 
+//  Це налаштування дозволить зберігати файли у визначеній дерикторії
+
+const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'temp');
+
+const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+
 export {
   SORT_ORDER,
   nameType,
@@ -34,4 +40,6 @@ export {
   ONE_DAY,
   SMTP,
   TEMPLATES_DIR,
+  TEMP_UPLOAD_DIR,
+  UPLOAD_DIR,
 };

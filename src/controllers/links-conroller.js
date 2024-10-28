@@ -111,6 +111,7 @@ const upsertLinkController = async (req, res, next) => {
 const patchLinkController = async (req, res, next) => {
   const { _id: userId } = req.user;
   const { linkId: _id } = req.params;
+  const photo = req.file;
 
   const existingLink = await findById({ _id, userId });
 
