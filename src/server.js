@@ -27,7 +27,7 @@ const startServer = () => {
 
   app.use(router);
 
-  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use(express.static(UPLOAD_DIR));
 
   app.use('*', notFoundHandler);
 

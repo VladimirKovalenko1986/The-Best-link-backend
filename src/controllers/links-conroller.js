@@ -10,6 +10,11 @@ import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseFilterParams from '../utils/parseFilterParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import createHttpError from 'http-errors';
+import saveFileToUploadsDir from '../utils/saveFileToUploadsDir.js';
+import saveFileToCloudinary from '../utils/saveFIleToCloudinary.js';
+import env from '../utils/env.js';
+
+const enable_cloudinary = env('ENABLE_CLOUDINARY');
 
 const getLinksController = async (req, res) => {
   const { _id: userId } = req.user;
@@ -52,7 +57,22 @@ const getLinkByIdController = async (req, res, next) => {
 
 const createLinkController = async (req, res) => {
   const { _id: userId } = req.user;
-  const result = await createLink({ ...req.body, userId });
+  let poster = '';
+
+  //* Це необхідно якщо файли зберігаються на сервері
+  // if (req.file) {
+  //   poster = await saveFileToUploadsDir(req.file, 'posters');
+  // }
+
+  if (req.file) {
+    if (enable_cloudinary === 'true') {
+      poster = await saveFileToCloudinary(req.file, 'posters');
+    } else {
+      poster = await saveFileToUploadsDir(req.file, 'posters');
+    }
+  }
+
+  const result = await createLink({ ...req.body, userId, poster });
 
   res.json({
     status: 201,
@@ -111,7 +131,6 @@ const upsertLinkController = async (req, res, next) => {
 const patchLinkController = async (req, res, next) => {
   const { _id: userId } = req.user;
   const { linkId: _id } = req.params;
-  const photo = req.file;
 
   const existingLink = await findById({ _id, userId });
 

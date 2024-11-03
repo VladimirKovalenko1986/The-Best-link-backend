@@ -24,7 +24,7 @@ router.get('/:linkId', isValidId, ctrlWrapper(getLinkByIdController));
 
 router.post(
   '/',
-  upload.single('photo'),
+  upload.single('posters'),
   validateBody(createLinkSchema),
   ctrlWrapper(createLinkController),
 );
@@ -33,7 +33,7 @@ router.delete('/:linkId', isValidId, ctrlWrapper(deleteLinkController));
 
 router.put(
   '/:linkId',
-  upload.single('photo'),
+  upload.single('posters'),
   isValidId,
   validateBody(updateLinkSchema),
   ctrlWrapper(upsertLinkController),
@@ -41,7 +41,7 @@ router.put(
 
 router.patch(
   '/:linkId',
-  upload.single('photo'),
+  upload.single('posters'),
   isValidId,
   validateBody(updateLinkSchema),
   ctrlWrapper(patchLinkController),

@@ -30,6 +30,10 @@ const linkSchema = new Schema(
       ref: 'users',
       required: true,
     },
+
+    poster: {
+      type: String,
+    },
   },
 
   {

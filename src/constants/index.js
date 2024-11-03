@@ -28,9 +28,16 @@ const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
 
 //  Це налаштування дозволить зберігати файли у визначеній дерикторії
 
-const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'temp');
+const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'src', 'temp');
 
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+const UPLOAD_DIR = path.join(process.cwd(), 'src', 'uploads');
+
+const UPLOAD_POSTERS_DIR = path.join(
+  process.cwd(),
+  'src',
+  'uploads',
+  'posters',
+);
 
 export {
   SORT_ORDER,
@@ -42,4 +49,5 @@ export {
   TEMPLATES_DIR,
   TEMP_UPLOAD_DIR,
   UPLOAD_DIR,
+  UPLOAD_POSTERS_DIR,
 };
