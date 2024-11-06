@@ -5,9 +5,11 @@ import {
   refreshUsersSession,
   requestResetToken,
   resetPassword,
+  loginOrSignupWithGoogle,
 } from '../services/auth-services.js';
 import { ONE_DAY } from '../constants/index.js';
 import createHttpError from 'http-errors';
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
 
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
@@ -94,6 +96,30 @@ const resetPasswordController = async (req, res) => {
   });
 };
 
+const getGoogleOAuthUrlController = async (req, res) => {
+  const url = generateAuthUrl();
+  res.json({
+    status: 200,
+    message: 'Successfully get Coogle OAuth url!',
+    data: {
+      url,
+    },
+  });
+};
+
+const loginWithGoogleController = async (req, res) => {
+  const session = await loginOrSignupWithGoogle(req.body.code);
+  setupSession(res, session);
+
+  res.json({
+    status: 200,
+    message: 'Successfully logged in via Google OAuth!',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
+};
+
 export {
   registerUserController,
   loginUserController,
@@ -101,4 +127,6 @@ export {
   refreshUserSessionController,
   requestResetEmailController,
   resetPasswordController,
+  getGoogleOAuthUrlController,
+  loginWithGoogleController,
 };

@@ -10,6 +10,11 @@ import createSession from './createSession.js';
 import { SMTP, TEMPLATES_DIR } from '../constants/index.js';
 import env from '../utils/env.js';
 import sendEmail from '../utils/sendMail.js';
+import {
+  getFullNameFromGoogleTokenPayload,
+  validateCode,
+} from '../utils/googleOAuth2.js';
+import { randomBytes } from 'node:crypto';
 
 const registerUser = async (payload) => {
   const user = await User.findOne({
@@ -158,6 +163,33 @@ const resetPassword = async (payload) => {
   await User.updateOne({ _id: user._id }, { password: encriptedPassword });
 };
 
+const loginOrSignupWithGoogle = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+
+  if (!payload) throw createHttpError(401);
+
+  let user = await User.findOne({
+    email: payload.email,
+  });
+
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await User.create({
+      email: payload.email,
+      name: getFullNameFromGoogleTokenPayload(payload),
+      password,
+    });
+  }
+
+  const newSession = createSession();
+
+  return await Sessions.create({
+    userId: user._id,
+    ...newSession,
+  });
+};
+
 export {
   registerUser,
   loginUser,
@@ -165,4 +197,5 @@ export {
   refreshUsersSession,
   requestResetToken,
   resetPassword,
+  loginOrSignupWithGoogle,
 };
