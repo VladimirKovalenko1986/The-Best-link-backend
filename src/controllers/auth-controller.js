@@ -10,6 +10,12 @@ import {
 import { ONE_DAY } from '../constants/index.js';
 import createHttpError from 'http-errors';
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
+import saveFileToUploadsDir from '../utils/saveFileToUploadsDir.js';
+import saveFileToCloudinary from '../utils/saveFIleToCloudinary.js';
+import env from '../utils/env.js';
+import { use } from 'bcrypt/promises.js';
+
+const enable_cloudinary = env('ENABLE_CLOUDINARY');
 
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
@@ -22,8 +28,22 @@ const setupSession = (res, session) => {
   });
 };
 
-const registerUserController = async (req, res) => {
-  const user = await registerUser(req.body);
+const registerUserController = async (req, res, next) => {
+  let photo = '';
+
+  if (req.file) {
+    if (enable_cloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'photo');
+    } else {
+      photo = await saveFileToUploadsDir(req.file, 'photo');
+    }
+  }
+
+  const user = await registerUser({ ...req.body, photo });
+
+  if (!user) {
+    return next(createHttpError(404, 'User not found'));
+  }
 
   res.json({
     status: 201,

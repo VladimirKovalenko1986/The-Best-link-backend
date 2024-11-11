@@ -55,7 +55,7 @@ const getLinkByIdController = async (req, res, next) => {
   });
 };
 
-const createLinkController = async (req, res) => {
+const createLinkController = async (req, res, next) => {
   const { _id: userId } = req.user;
   let poster = '';
 
@@ -73,6 +73,10 @@ const createLinkController = async (req, res) => {
   }
 
   const result = await createLink({ ...req.body, userId, poster });
+
+  if (!result) {
+    return next(createHttpError(404, 'Link not found'));
+  }
 
   res.json({
     status: 201,
@@ -131,6 +135,15 @@ const upsertLinkController = async (req, res, next) => {
 const patchLinkController = async (req, res, next) => {
   const { _id: userId } = req.user;
   const { linkId: _id } = req.params;
+  let poster = '';
+
+  if (req.file) {
+    if (enable_cloudinary === 'true') {
+      poster = await saveFileToCloudinary(req.file, 'posters');
+    } else {
+      poster = await saveFileToUploadsDir(req.file, 'posters');
+    }
+  }
 
   const existingLink = await findById({ _id, userId });
 
@@ -138,7 +151,10 @@ const patchLinkController = async (req, res, next) => {
     return next(createHttpError(404, `Link with id ${_id} does not exist`));
   }
 
-  const result = await updateLink({ _id, userId }, req.body);
+  const updateData = { ...req.body };
+  if (poster) updateData.poster = poster;
+
+  const result = await updateLink({ _id, userId }, updateData);
 
   if (!result) {
     next(createHttpError(404, `Link ${_id} not found`));

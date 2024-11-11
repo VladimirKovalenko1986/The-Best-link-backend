@@ -18,11 +18,13 @@ import {
   getGoogleOAuthUrlController,
   loginWithGoogleController,
 } from '../controllers/auth-controller.js';
+import upload from '../middlewares/multer.js';
 
 const router = Router();
 
 router.post(
   '/register',
+  upload.single('photo'),
   validateBody(registerUserSchema),
   ctrlWrapper(registerUserController),
 );
