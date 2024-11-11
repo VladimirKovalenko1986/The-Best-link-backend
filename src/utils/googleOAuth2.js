@@ -25,7 +25,8 @@ const generateAuthUrl = () =>
 const validateCode = async (code) => {
   const response = await googleOAuthClient.getToken(code);
 
-  if (!response.tokens.id_token) throw createHttpError(401, 'Unauthorized');
+  if (!response.tokens.id_token)
+    throw createHttpError(401, 'Google OAuth code invalid');
 
   const ticket = await googleOAuthClient.verifyIdToken({
     idToken: response.tokens.id_token,
@@ -34,7 +35,7 @@ const validateCode = async (code) => {
 };
 
 const getFullNameFromGoogleTokenPayload = (payload) => {
-  let fullName = '';
+  let fullName = 'User';
 
   if (payload.given_name && payload.family_name) {
     fullName = `${payload.given_name} ${payload.family_name}`;

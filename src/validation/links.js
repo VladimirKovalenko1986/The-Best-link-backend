@@ -8,6 +8,7 @@ const createLinkSchema = Joi.object({
   link: Joi.string().required(),
   nameLink: Joi.string().required(),
   textLink: Joi.string().required(),
+  poster: Joi.string().optional(),
 });
 
 const updateLinkSchema = Joi.object({
@@ -15,6 +16,7 @@ const updateLinkSchema = Joi.object({
   link: Joi.string(),
   nameLink: Joi.string(),
   textLink: Joi.string(),
+  poster: Joi.string().optional(),
 });
 
 export { createLinkSchema, updateLinkSchema };
