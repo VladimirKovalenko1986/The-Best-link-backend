@@ -13,7 +13,6 @@ import { generateAuthUrl } from '../utils/googleOAuth2.js';
 import saveFileToUploadsDir from '../utils/saveFileToUploadsDir.js';
 import saveFileToCloudinary from '../utils/saveFIleToCloudinary.js';
 import env from '../utils/env.js';
-import { use } from 'bcrypt/promises.js';
 
 const enable_cloudinary = env('ENABLE_CLOUDINARY');
 
