@@ -15,6 +15,9 @@ servers:
   - url: http://localhost:3000
   - url: https://the-best-link-backend.onrender.com
   paths:
+    /links:
+      post:
+        $ref: ../swagger/paths/links/post.yaml
     /links/{id}:
       get:
         $ref: ../swagger/paths/links/{id}/get.yaml

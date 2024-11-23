@@ -1,3 +1,37 @@
 type: object
 required:
-  -
+  - _id
+  - nameType
+  - link
+  - nameLink
+  - textLink
+  - userId
+propertis:
+  _id:
+    description: 'link id'
+    type: string
+    example: 65ca67e7ae7f10c88b598384
+  nameType:
+    description: 'link type name'
+    type: string
+    enam: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js']
+  link:
+    description: 'link'
+    type: string
+    example: 'https://github.com/yoksel/common-words'
+  nameLink:
+    description: 'Name link'
+    type: string
+    example: 'Слова, часто використовують в CSS-класах'
+  textLink:
+    description: 'Description link'
+    type: string
+    example: 'Слова, часто використовують в CSS-класах'
+  userId:
+    description: 'Id User'
+    type: string
+    example: '67310cc9194e34e7ab751508'
+  poster:
+    description: 'Pictures link'
+    type: string
+    example: 'https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png'

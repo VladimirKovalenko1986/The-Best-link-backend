@@ -1,0 +1,115 @@
+tags:
+  - links
+  summary: Get list of links
+  operationId: getLinks
+  description: 'Get link of users with this endpoint'
+  security:
+    - bearerAuth: []
+  parameters:
+    - in: query
+    name: page
+    schema:
+      type: integer
+    example: 1
+    - in: query
+    name: perPage
+    schema:
+      type: integer
+      example: 10
+    - in: query
+    name: sortBy
+    schema:
+      type: string
+      example: 'nameType'
+      description: 'All links fields can be mentioned. Default value - _id'
+    - in: query
+    name: sortOrder
+    schema:
+      type: string
+      enam: ['asc', 'desc']
+      example: 'asc'
+    - in: query
+    name: nameType
+    schema:
+      type: string
+      enam: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js']
+      example: 'HTML&CSS'
+    - in: query
+    name: link
+    schema:
+      type: string
+      example: 'https://github.com/yoksel/common-words'
+    - in: query
+    name: nameLink
+    schema:
+      type: string
+      example: 'Слова, часто використовують в CSS-класах'
+    - in: query
+    name: textLink
+    schema:
+      type: string
+      example: 'textLink'
+      example: 'Слова, часто використовують в CSS-класах'
+    - in: query
+    name: createdAt
+    schema:
+      type: string
+      example: '2024-11-10T19:44:03.282Z'
+    - in: query
+      name: updatedAt
+    schema:
+      type: string
+      example: '2024-11-10T19:44:03.282Z'
+responses:
+  '200':
+    description: Successfully found links!
+    content:
+      applycation/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found links!
+            data:
+              type: object
+              required:
+                - data
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasNextPage
+                - hasPreviousPage
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '../../components/schemas/link.yaml'
+                page:
+                  type: number
+                  example: 2
+                perPage:
+                  type: number
+                  example: 4
+                totalItems:
+                  type: number
+                  example: 4
+                totalPages:
+                  type: number
+                  example: 4
+                hasNextPage:
+                  type: boolean
+                  example: false
+                hasPreviousPage:
+                  type: boolean
+                  example: true
+  '401':
+    $ref: '../../components/responses/401.yaml'
