@@ -1,66 +1,66 @@
 tags:
   - links
-  summary: Create link
-  operationId: createLink
-  description: 'Create a link with payload'
-  security:
-    -bearerAuth: []
-  requestBody:
+summary: Create link
+operationId: createLink
+description: 'Create a link with payload'
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - nameType
+          - link
+          - nameLink
+          - textLink
+          - userId
+        properties:
+          nameType:
+            description: 'link type name'
+            type: string
+            enum: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js']
+          link:
+            description: 'link'
+            type: string
+            example: 'https://github.com/yoksel/common-words'
+          nameLink:
+            description: 'Name link'
+            type: string
+            example: 'Слова, часто використовують в CSS-класах'
+          textLink:
+            description: 'Description link'
+            type: string
+            example: 'Слова, часто використовують в CSS-класах'
+          userId:
+            description: 'Id User'
+            type: string
+            example: '67310cc9194e34e7ab751508'
+          poster:
+            description: 'Pictures link'
+            type: string
+            example: 'https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png'
+responses:
+  '201':
+    description: Create a link
     content:
-      multipart/form-data:
+      application/json:
         schema:
           type: object
           required:
-            - nameType
-            - link
-            - nameLink
-            - textLink
-            - userId
+            - status
+            - message
+            - data
           properties:
-            nameType:
-              description: 'link type name'
+            status:
+              type: integer
+              example: 201
+            message:
               type: string
-              enam: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js']
-            link:
-              description: 'link'
-              type: string
-              example: 'https://github.com/yoksel/common-words'
-            nameLink:
-              description: 'Name link'
-              type: string
-              example: 'Слова, часто використовують в CSS-класах'
-            textLink:
-              description: 'Description link'
-              type: string
-              example: 'Слова, часто використовують в CSS-класах'
-            userId:
-              description: 'Id User'
-              type: string
-              example: '67310cc9194e34e7ab751508'
-            poster:
-              description: 'Pictures link'
-              type: string
-              example: 'https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png'
-  responses:
-    '201':
-      description: Create a link
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - status
-              - message
-              - data
-            properties:
-              status:
-                type: integer
-                example: 201
-              message:
-                type: string
-                example: Successfully created a link!
+              example: Successfully created a link!
             data:
               type: object
               $ref: '../../components/schemas/link.yaml'
-    '401':
-      $ref: '../../components/responses/401.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'

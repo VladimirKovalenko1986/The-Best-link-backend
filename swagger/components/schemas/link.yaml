@@ -6,7 +6,7 @@ required:
   - nameLink
   - textLink
   - userId
-propertis:
+properties:
   _id:
     description: 'link id'
     type: string
@@ -14,7 +14,7 @@ propertis:
   nameType:
     description: 'link type name'
     type: string
-    enam: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js']
+    enum: ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js']
   link:
     description: 'link'
     type: string

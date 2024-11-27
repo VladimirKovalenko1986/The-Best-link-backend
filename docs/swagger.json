@@ -1,0 +1,479 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "The Bast links app",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "This is documentation of The Bast links app"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://the-best-link-backend.onrender.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "links",
+      "description": "Operations about links."
+    },
+    {
+      "name": "Auth",
+      "description": "Auth operations."
+    }
+  ],
+  "paths": {
+    "/links": {
+      "get": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Get list of links",
+        "operationId": "getLinks",
+        "description": "Get link of users with this endpoint",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "nameType",
+              "description": "All links fields can be mentioned. Default value - _id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "nameType",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "HTML&CSS",
+                "JS",
+                "React",
+                "TS",
+                "Node.js"
+              ],
+              "example": "HTML&CSS"
+            }
+          },
+          {
+            "in": "query",
+            "name": "link",
+            "schema": {
+              "type": "string",
+              "example": "https://github.com/yoksel/common-words"
+            }
+          },
+          {
+            "in": "query",
+            "name": "nameLink",
+            "schema": {
+              "type": "string",
+              "example": "Слова, часто використовують в CSS-класах"
+            }
+          },
+          {
+            "in": "query",
+            "name": "textLink",
+            "schema": {
+              "type": "string",
+              "example": "Слова, часто використовують в CSS-класах"
+            }
+          },
+          {
+            "in": "query",
+            "name": "createdAt",
+            "schema": {
+              "type": "string",
+              "example": "2024-11-10T19:44:03.282Z"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updatedAt",
+            "schema": {
+              "type": "string",
+              "example": "2024-11-10T19:44:03.282Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found links!",
+            "content": {
+              "applycation/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found links!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/link"
+                          }
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "totalItems": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Create link",
+        "operationId": "createLink",
+        "description": "Create a link with payload",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nameType",
+                  "link",
+                  "nameLink",
+                  "textLink",
+                  "userId"
+                ],
+                "properties": {
+                  "nameType": {
+                    "description": "link type name",
+                    "type": "string",
+                    "enum": [
+                      "HTML&CSS",
+                      "JS",
+                      "React",
+                      "TS",
+                      "Node.js"
+                    ]
+                  },
+                  "link": {
+                    "description": "link",
+                    "type": "string",
+                    "example": "https://github.com/yoksel/common-words"
+                  },
+                  "nameLink": {
+                    "description": "Name link",
+                    "type": "string",
+                    "example": "Слова, часто використовують в CSS-класах"
+                  },
+                  "textLink": {
+                    "description": "Description link",
+                    "type": "string",
+                    "example": "Слова, часто використовують в CSS-класах"
+                  },
+                  "userId": {
+                    "description": "Id User",
+                    "type": "string",
+                    "example": "67310cc9194e34e7ab751508"
+                  },
+                  "poster": {
+                    "description": "Pictures link",
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a link!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/link"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/links/{id}": {
+      "get": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Get links by id",
+        "operationId": "getLink",
+        "description": "Get link by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get link by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found link with id 65ca67e7ae7f10c88b598384!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/link"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "link": {
+        "type": "object",
+        "required": [
+          "_id",
+          "nameType",
+          "link",
+          "nameLink",
+          "textLink",
+          "userId"
+        ],
+        "properties": {
+          "_id": {
+            "description": "link id",
+            "type": "string",
+            "example": "65ca67e7ae7f10c88b598384"
+          },
+          "nameType": {
+            "description": "link type name",
+            "type": "string",
+            "enum": [
+              "HTML&CSS",
+              "JS",
+              "React",
+              "TS",
+              "Node.js"
+            ]
+          },
+          "link": {
+            "description": "link",
+            "type": "string",
+            "example": "https://github.com/yoksel/common-words"
+          },
+          "nameLink": {
+            "description": "Name link",
+            "type": "string",
+            "example": "Слова, часто використовують в CSS-класах"
+          },
+          "textLink": {
+            "description": "Description link",
+            "type": "string",
+            "example": "Слова, часто використовують в CSS-класах"
+          },
+          "userId": {
+            "description": "Id User",
+            "type": "string",
+            "example": "67310cc9194e34e7ab751508"
+          },
+          "poster": {
+            "description": "Pictures link",
+            "type": "string",
+            "example": "https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png"
+          }
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "description": "UnauthHorizad error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token example"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

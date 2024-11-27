@@ -5,24 +5,26 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-    description: This is documentation of The Bast links app
+  description: This is documentation of The Bast links app
 tags:
-- name: links
-description: Operations about links.
-- name: Auth
-description: Auth operations.
+  - name: links
+    description: Operations about links.
+  - name: Auth
+    description: Auth operations.
 servers:
   - url: http://localhost:3000
   - url: https://the-best-link-backend.onrender.com
-  paths:
-    /links:
-      post:
-        $ref: ../swagger/paths/links/post.yaml
-    /links/{id}:
-      get:
-        $ref: ../swagger/paths/links/{id}/get.yaml
-    components:
-      securitySchemes:
-        bearerAuth:
-          type: http
-          scheme: bearer
+paths:
+  /links:
+    get:
+      $ref: '../swagger/paths/links/get.yaml'
+    post:
+      $ref: ../swagger/paths/links/post.yaml
+  /links/{id}:
+    get:
+      $ref: ../swagger/paths/links/{id}/get.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

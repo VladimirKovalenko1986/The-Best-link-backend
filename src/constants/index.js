@@ -39,6 +39,8 @@ const UPLOAD_POSTERS_DIR = path.join(
   'posters',
 );
 
+const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');
+
 export {
   SORT_ORDER,
   nameType,
@@ -50,4 +52,5 @@ export {
   TEMP_UPLOAD_DIR,
   UPLOAD_DIR,
   UPLOAD_POSTERS_DIR,
+  SWAGGER_PATH,
 };
