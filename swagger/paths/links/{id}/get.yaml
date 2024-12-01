@@ -1,6 +1,6 @@
 tags:
   - links
-summary: Get links by id
+summary: Get link by id
 operationId: getLink
 description: 'Get link by id'
 security:

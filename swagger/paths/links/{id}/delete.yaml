@@ -1,0 +1,46 @@
+tags:
+  - links
+summary: Delete link by id
+operationId: deleteLink
+description: 'Delete link by id'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+responses:
+  '204':
+    description: 'Delete link by id'
+    content:
+      applycation/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 204
+            message:
+              type: string
+              example: 'Link 65ca67e7ae7f10c88b598384 delete'
+  '404':
+    description: 'link not found'
+    content:
+      applycation/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: link not found
+  '401':
+    $ref: ../../../components/responses/401.yaml

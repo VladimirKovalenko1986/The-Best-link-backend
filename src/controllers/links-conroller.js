@@ -163,7 +163,7 @@ const patchLinkController = async (req, res, next) => {
 
   res.json({
     status: 200,
-    message: 'Successfully patch a link!',
+    message: 'Successfully update a link!',
     data: result.link,
   });
 };

@@ -23,6 +23,10 @@ paths:
   /links/{id}:
     get:
       $ref: ../swagger/paths/links/{id}/get.yaml
+    patch:
+      $ref: ../swagger/paths/links/{id}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/links/{id}/delete.yaml
   /auth/register:
     post:
       $ref: ../swagger/paths/auth/register.yaml

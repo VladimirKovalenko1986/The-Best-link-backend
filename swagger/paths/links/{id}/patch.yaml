@@ -1,21 +1,24 @@
 tags:
   - links
-summary: Create link
-operationId: createLink
-description: 'Create a link with payload'
+summary: Update link by id
+operationId: updateLink
+description: 'Update link by id'
 security:
   - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
 requestBody:
+  description: 'Update link'
+  required: true
   content:
-    multipart/form-data:
+    multipart/from-data:
       schema:
         type: object
-        required:
-          - nameType
-          - link
-          - nameLink
-          - textLink
-          - userId
         properties:
           nameType:
             description: 'link type name'
@@ -35,7 +38,7 @@ requestBody:
             type: string
             example: 'Слова, часто використовують в CSS-класах'
           userId:
-            description: 'Id User'
+            description: 'Id user'
             type: string
             example: '67310cc9194e34e7ab751508'
           poster:
@@ -43,8 +46,8 @@ requestBody:
             type: string
             example: 'https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png'
 responses:
-  '201':
-    description: Create a link
+  '200':
+    description: Udate a link
     content:
       application/json:
         schema:
@@ -56,12 +59,38 @@ responses:
           properties:
             status:
               type: integer
-              example: 201
+              example: 200
             message:
               type: string
-              example: Successfully created a link!
+              example: Successfully update a link!
             data:
               type: object
-              $ref: '../../components/schemas/link.yaml'
+              $ref: '../../../components/schemas/link.yaml'
+  '400':
+    description: 'Invalid request payload or parameters'
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Invalid request payload
+  '404':
+    description: 'link not found'
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: link not found
   '401':
-    $ref: '../../components/responses/401.yaml'
+    $ref: '../../../components/responses/401.yaml'

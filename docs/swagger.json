@@ -244,7 +244,8 @@
                       "React",
                       "TS",
                       "Node.js"
-                    ]
+                    ],
+                    "example": "HTML&CSS"
                   },
                   "link": {
                     "description": "link",
@@ -317,7 +318,7 @@
         "tags": [
           "links"
         ],
-        "summary": "Get links by id",
+        "summary": "Get link by id",
         "operationId": "getLink",
         "description": "Get link by id",
         "security": [
@@ -368,6 +369,227 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Update link by id",
+        "operationId": "updateLink",
+        "description": "Update link by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update link",
+          "required": true,
+          "content": {
+            "multipart/from-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nameType": {
+                    "description": "link type name",
+                    "type": "string",
+                    "enum": [
+                      "HTML&CSS",
+                      "JS",
+                      "React",
+                      "TS",
+                      "Node.js"
+                    ],
+                    "example": "HTML&CSS"
+                  },
+                  "link": {
+                    "description": "link",
+                    "type": "string",
+                    "example": "https://github.com/yoksel/common-words"
+                  },
+                  "nameLink": {
+                    "description": "Name link",
+                    "type": "string",
+                    "example": "Слова, часто використовують в CSS-класах"
+                  },
+                  "textLink": {
+                    "description": "Description link",
+                    "type": "string",
+                    "example": "Слова, часто використовують в CSS-класах"
+                  },
+                  "userId": {
+                    "description": "Id user",
+                    "type": "string",
+                    "example": "67310cc9194e34e7ab751508"
+                  },
+                  "poster": {
+                    "description": "Pictures link",
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Udate a link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully update a link!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/link"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request payload or parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request payload"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "link not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "link not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Delete link by id",
+        "operationId": "deleteLink",
+        "description": "Delete link by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete link by id",
+            "content": {
+              "applycation/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 204
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Link 65ca67e7ae7f10c88b598384 delete"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "link not found",
+            "content": {
+              "applycation/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "link not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -445,8 +667,8 @@
               }
             }
           },
-          "404": {
-            "$ref": "#/components/responses/404"
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       }
@@ -581,43 +803,6 @@
                     "message": {
                       "type": "string",
                       "example": "Access token example"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "UnauthHorizad error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 404
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
                     }
                   }
                 }
