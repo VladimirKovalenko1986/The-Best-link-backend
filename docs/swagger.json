@@ -599,9 +599,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Register user",
-        "operationId": "registerUser",
-        "description": "Register user",
+        "summary": "signup user",
+        "operationId": "signupUser",
+        "description": "signup user",
         "security": [
           {
             "bearerAuth": []
@@ -630,6 +630,7 @@
                   },
                   "password": {
                     "description": "User password",
+                    "type": "string",
                     "example": "11qwqwoocxck"
                   }
                 }
@@ -656,7 +657,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully registered a user!"
+                      "example": "Successfully signup user!"
                     },
                     "data": {
                       "type": "object",
@@ -666,6 +667,152 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/user"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "signin user",
+        "operationId": "signinUser",
+        "description": "sign in user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "User name",
+                    "type": "string",
+                    "example": "Volodymyr Kovalenko"
+                  },
+                  "password": {
+                    "description": "User password",
+                    "type": "string",
+                    "example": "11qwqwoocxck"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "signin user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged in an user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "ClHy+mX08ks+xVYwSEFt7Q4KQH3Sv7h7ilFch5eT"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "logout user",
+        "operationId": "logoutUser",
+        "description": "logout user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully logged out"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -763,12 +910,22 @@
           "password": {
             "description": "User password",
             "type": "string",
-            "example": "11qwqwoocxck"
+            "example": "$2b$10$y6qF5orLSc.Fb3wEDTkjoeNtffGy371L/vpZTWFvuqtQzxU5vRaxa"
           },
           "photo": {
             "description": "Photo profile User",
             "type": "string",
             "example": "https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png"
+          },
+          "createdAt": {
+            "description": "data created",
+            "type": "string",
+            "example": "2024-12-01T17:57:16.710Z"
+          },
+          "updatedAt": {
+            "description": "data update",
+            "type": "string",
+            "example": "2024-12-01T17:57:16.710Z"
           }
         }
       }

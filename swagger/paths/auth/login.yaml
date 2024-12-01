@@ -1,35 +1,30 @@
 tags:
   - Auth
-summary: signup user
-operationId: signupUser
-description: 'signup user'
+summary: signin user
+operationId: signinUser
+description: 'sign in user'
 security:
   - bearerAuth: []
 requestBody:
   content:
-    multipart/form-data:
+    application/json:
       schema:
         type: object
         required:
           - name
-          - email
           - password
         properties:
           name:
             description: 'User name'
             type: string
             example: 'Volodymyr Kovalenko'
-          email:
-            description: 'User email'
-            type: string
-            example: 'popov556@gmail.com'
           password:
             description: 'User password'
             type: string
             example: '11qwqwoocxck'
 responses:
-  '201':
-    description: Create new User
+  '200':
+    description: signin user
     content:
       application/json:
         schema:
@@ -41,13 +36,16 @@ responses:
           properties:
             status:
               type: integer
-              example: 201
+              example: 200
             message:
               type: string
-              example: 'Successfully signup user!'
+              example: 'Successfully logged in an user!'
             data:
               type: object
-              $ref: ../../components/schemas/user.yaml
+              properties:
+                accessToken:
+                  type: string
+                  example: 'ClHy+mX08ks+xVYwSEFt7Q4KQH3Sv7h7ilFch5eT'
   '404':
     description: 'User not found'
     content:
@@ -61,8 +59,5 @@ responses:
             message:
               type: string
               example: User not found
-            data:
-              type: object
-              $ref: ../../components/schemas/user.yaml
   '401':
     $ref: ../../components/responses/401.yaml

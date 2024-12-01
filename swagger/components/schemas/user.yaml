@@ -20,8 +20,16 @@ properties:
   password:
     description: 'User password'
     type: string
-    example: '11qwqwoocxck'
+    example: '$2b$10$y6qF5orLSc.Fb3wEDTkjoeNtffGy371L/vpZTWFvuqtQzxU5vRaxa'
   photo:
     description: 'Photo profile User'
     type: string
     example: 'https://res.cloudinary.com/df2xb0bar/image/upload/v1731267842/posters/neshlbz3wqfx6njv0f2m.png'
+  createdAt:
+    description: 'data created'
+    type: string
+    example: '2024-12-01T17:57:16.710Z'
+  updatedAt:
+    description: 'data update'
+    type: string
+    example: '2024-12-01T17:57:16.710Z'
