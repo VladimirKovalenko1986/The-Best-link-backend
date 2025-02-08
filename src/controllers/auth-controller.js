@@ -19,10 +19,15 @@ const enable_cloudinary = env('ENABLE_CLOUDINARY');
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // У production має бути true
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Для локального сервера - 'Lax'
     expires: new Date(Date.now() + ONE_DAY),
   });
+
   res.cookie('sessionId', session._id, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
     expires: new Date(Date.now() + ONE_DAY),
   });
 };
@@ -79,14 +84,23 @@ const loginUserController = async (req, res, next) => {
 };
 
 const logoutUserController = async (req, res) => {
-  if (req.cookies.sessionId) {
-    await logoutUser(req.cookies.sessionId);
-  } else {
-    throw createHttpError(401, 'Session not found');
+  if (!req.cookies.sessionId) {
+    return res.status(401).json({ message: 'Session not found' });
   }
 
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
+  await logoutUser(req.cookies.sessionId);
+
+  res.clearCookie('sessionId', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+  });
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+  });
 
   res.status(204).send();
 };
