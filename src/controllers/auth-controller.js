@@ -51,27 +51,31 @@ const registerUserController = async (req, res, next) => {
   });
 };
 
-const loginUserController = async (req, res) => {
-  const session = await loginUser(req.body);
+const loginUserController = async (req, res, next) => {
+  try {
+    const { user, session } = await loginUser(req.body); // ✅ Тепер повертається і user, і session
 
-  if (!session) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
+    if (!session) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
-  setupSession(res, session);
+    setupSession(res, session);
 
-  res.json({
-    status: 200,
-    message: 'Successfully logged in an user!',
-    data: {
-      user: {
-        name: session.user.name,
-        email: session.user.email,
-        photo: session.user.photo || null, // Додаємо фото, якщо є
+    res.json({
+      status: 200,
+      message: 'Successfully logged in an user!',
+      data: {
+        user: {
+          name: user.name,
+          email: user.email,
+          photo: user.photo || null, // Якщо є фото, то додаємо
+        },
+        accessToken: session.accessToken,
       },
-      accessToken: session.accessToken,
-    },
-  });
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const logoutUserController = async (req, res) => {

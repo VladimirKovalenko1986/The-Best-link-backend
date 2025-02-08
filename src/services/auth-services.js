@@ -34,9 +34,7 @@ const registerUser = async (payload) => {
 };
 
 const loginUser = async (payload) => {
-  const user = await User.findOne({
-    email: payload.email,
-  });
+  const user = await User.findOne({ email: payload.email });
 
   if (!user) {
     throw createHttpError(404, 'User not found');
@@ -48,16 +46,16 @@ const loginUser = async (payload) => {
     throw createHttpError(401, 'Unauthorized');
   }
 
-  await Sessions.deleteOne({
-    userId: user._id,
-  });
+  await Sessions.deleteOne({ userId: user._id });
 
   const newSession = createSession();
 
-  return await Sessions.create({
+  const session = await Sessions.create({
     userId: user._id,
     ...newSession,
   });
+
+  return { user, session };
 };
 
 const logoutUser = async (sessionId) => {
