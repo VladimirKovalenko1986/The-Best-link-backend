@@ -15,7 +15,12 @@ const startServer = () => {
   const app = express();
 
   app.use(express.json());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: 'ttps://the-best-link-backend.onrender.com', // ⚡️ Дозволяємо запити з фронтенду
+      credentials: true, // ⚡️ Дозволяємо передавати cookies
+    }),
+  );
   app.use(cookieParser());
 
   app.use(
