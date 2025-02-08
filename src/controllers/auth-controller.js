@@ -68,7 +68,7 @@ const loginUserController = async (req, res, next) => {
         user: {
           name: user.name,
           email: user.email,
-          photo: user.photo || null, // Якщо є фото, то додаємо
+          photo: user.photo || null,
         },
         accessToken: session.accessToken,
       },
