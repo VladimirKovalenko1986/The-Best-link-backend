@@ -17,7 +17,7 @@ const startServer = () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: 'ttps://the-best-link-backend.onrender.com', // ⚡️ Дозволяємо запити з фронтенду
+      origin: 'https://the-best-link-backend.onrender.com', // ⚡️ Дозволяємо запити з фронтенду
       credentials: true, // ⚡️ Дозволяємо передавати cookies
     }),
   );
