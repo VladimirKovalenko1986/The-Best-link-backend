@@ -19,15 +19,15 @@ const enable_cloudinary = env('ENABLE_CLOUDINARY');
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // У production має бути true
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Для локального сервера - 'Lax'
+    secure: true, // ⚡️ Встановити `secure` для Render
+    sameSite: 'None', // ⚡️ Потрібно для крос-доменних запитів
     expires: new Date(Date.now() + ONE_DAY),
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    secure: true,
+    sameSite: 'None',
     expires: new Date(Date.now() + ONE_DAY),
   });
 };
@@ -57,30 +57,26 @@ const registerUserController = async (req, res, next) => {
 };
 
 const loginUserController = async (req, res, next) => {
-  try {
-    const { user, session } = await loginUser(req.body); // ✅ Тепер повертається і user, і session
+  const { user, session } = await loginUser(req.body);
 
-    if (!session) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    setupSession(res, session);
-
-    res.json({
-      status: 200,
-      message: 'Successfully logged in an user!',
-      data: {
-        user: {
-          name: user.name,
-          email: user.email,
-          photo: user.photo || null,
-        },
-        accessToken: session.accessToken,
-      },
-    });
-  } catch (error) {
-    next(error);
+  if (!session) {
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
+
+  setupSession(res, session);
+
+  res.json({
+    status: 200,
+    message: 'Successfully logged in an user!',
+    data: {
+      user: {
+        name: user.name,
+        email: user.email,
+        photo: user.photo || null,
+      },
+      accessToken: session.accessToken,
+    },
+  });
 };
 
 const logoutUserController = async (req, res) => {
@@ -92,14 +88,14 @@ const logoutUserController = async (req, res) => {
 
   res.clearCookie('sessionId', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    secure: true, // ⚡️ Потрібно для Render
+    sameSite: 'None',
   });
 
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    secure: true,
+    sameSite: 'None',
   });
 
   res.status(204).send();

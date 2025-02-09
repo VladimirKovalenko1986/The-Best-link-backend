@@ -17,8 +17,8 @@ const startServer = () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: ['http://localhost:5173', 'https://the-best-link-frontend.com'], // ⚡️ Дозволяємо запити з фронтенду
-      credentials: true, // ⚡️ Дозволяємо передавати cookies
+      origin: ['https://the-best-link-frontend.onrender.com'], // Дозволити фронт
+      credentials: true, // Дозволяє передавати кукі
     }),
   );
   app.use(cookieParser());
