@@ -17,10 +17,17 @@ const startServer = () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: 'https://the-best-link-frontend.onrender.com', // ⚡️ Фронтенд на Render
-      credentials: true, // ⚡️ Дозволяє передавати кукі
+      origin: [
+        'http://localhost:5173',
+        'https://the-best-link-frontend.onrender.com',
+      ], // ✅ Дозволяє фронт
+      credentials: true, // ✅ Дозволяє передавати куки
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Дозволені методи
+      allowedHeaders: ['Content-Type', 'Authorization'], // Явно вказати дозволені заголовки
     }),
   );
+
+  app.options('*', cors()); // ✅ Дозволяє preflight-запити
 
   app.use(cookieParser());
 
