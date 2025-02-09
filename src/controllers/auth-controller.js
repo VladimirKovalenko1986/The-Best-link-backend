@@ -19,8 +19,8 @@ const enable_cloudinary = env('ENABLE_CLOUDINARY');
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    secure: true, // ⚡️ Встановити `secure` для Render
-    sameSite: 'None', // ⚡️ Потрібно для крос-доменних запитів
+    secure: true, // ⚡️ Render працює тільки з `secure: true`
+    sameSite: 'None', // ⚡️ Потрібно для крос-доменних кукі
     expires: new Date(Date.now() + ONE_DAY),
   });
 
