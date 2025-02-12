@@ -12,6 +12,7 @@ import createHttpError from 'http-errors';
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
 import saveFileToUploadsDir from '../utils/saveFileToUploadsDir.js';
 import saveFileToCloudinary from '../utils/saveFIleToCloudinary.js';
+import { User } from '../db/models/User.js';
 import env from '../utils/env.js';
 
 const enable_cloudinary = env('ENABLE_CLOUDINARY');
@@ -107,13 +108,30 @@ const refreshUserSessionController = async (req, res) => {
     refreshToken: req.cookies.refreshToken,
   });
 
-  setupSession(res, session);
+  if (!session) {
+    return res.status(401).json({
+      status: 401,
+      message: 'Invalid session or refresh token',
+    });
+  }
+
+  const user = await User.findById(session.userId).select('-password');
+
+  if (!user) {
+    return res.status(404).json({
+      status: 404,
+      message: 'User not found',
+    });
+  }
+
+  setupSession(res, session); // Оновлюємо кукі
 
   res.json({
     status: 200,
-    message: 'Successfully refreshed a newsession!',
+    message: 'Successfully refreshed session!',
     data: {
       accessToken: session.accessToken,
+      user,
     },
   });
 };
