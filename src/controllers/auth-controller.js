@@ -103,28 +103,30 @@ const logoutUserController = async (req, res) => {
 };
 
 const refreshUserSessionController = async (req, res) => {
+  const { refreshToken } = req.cookies; // ✅ Отримуємо `refreshToken` з cookies
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: 'Refresh token missing' });
+  }
+
   const session = await refreshUsersSession({
     sessionId: req.cookies.sessionId,
-    refreshToken: req.cookies.refreshToken,
+    refreshToken,
   });
 
   if (!session) {
-    return res.status(401).json({
-      status: 401,
-      message: 'Invalid session or refresh token',
-    });
+    return res
+      .status(401)
+      .json({ message: 'Invalid session or refresh token' });
   }
 
   const user = await User.findById(session.userId).select('-password');
 
   if (!user) {
-    return res.status(404).json({
-      status: 404,
-      message: 'User not found',
-    });
+    return res.status(404).json({ message: 'User not found' });
   }
 
-  setupSession(res, session); // Оновлюємо кукі
+  setupSession(res, session); // Оновлюємо cookies
 
   res.json({
     status: 200,
