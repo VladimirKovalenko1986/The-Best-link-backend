@@ -67,6 +67,7 @@ const logoutUser = async (sessionId) => {
 };
 
 const refreshUsersSession = async ({ sessionId, refreshToken }) => {
+  // 🔍 Шукаємо всі сесії користувача за `refreshToken`
   const session = await Sessions.findOne({
     _id: sessionId,
     refreshToken,
@@ -83,19 +84,24 @@ const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     throw createHttpError(401, 'Session token expired');
   }
 
-  // 🔄 **Оновлення сесії замість створення нової**
+  // 🔄 **Замість створення нової сесії - оновлюємо існуючу**
   const newSessionData = createSession();
 
-  // ❌ **Видаляємо стару сесію перед створенням нової**
-  await Sessions.deleteOne({ _id: sessionId, refreshToken });
+  session.accessToken = newSessionData.accessToken;
+  session.refreshToken = newSessionData.refreshToken;
+  session.accessTokenValidUntil = newSessionData.accessTokenValidUntil;
+  session.refreshTokenValidUntil = newSessionData.refreshTokenValidUntil;
+  session.updatedAt = new Date();
 
-  // ✅ **Створюємо нову сесію**
-  const createdSession = await Sessions.create({
+  await session.save(); // ✅ Зберігаємо оновлену сесію
+
+  // ❌ Видаляємо всі **старі сесії** цього користувача, крім оновленої
+  await Sessions.deleteMany({
     userId: session.userId,
-    ...newSessionData,
+    _id: { $ne: session._id }, // ✅ Видаляємо всі крім поточної
   });
 
-  return createdSession; // ✅ Повертаємо нову сесію
+  return session; // ✅ Повертаємо оновлену сесію
 };
 
 const requestResetToken = async (email) => {
