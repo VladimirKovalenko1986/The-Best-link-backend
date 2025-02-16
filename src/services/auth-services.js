@@ -75,6 +75,7 @@ const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   if (!session) {
     throw createHttpError(401, 'Session not found');
   }
+
   const isSessionTokenExpired =
     new Date() > new Date(session.refreshTokenValidUntil);
 
@@ -82,16 +83,18 @@ const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     throw createHttpError(401, 'Session token expired');
   }
 
-  const newSession = createSession();
+  // 🔄 **Оновлюємо існуючу сесію**, а не створюємо нову
+  const newSessionData = createSession();
 
-  const createdSession = await Sessions.create({
-    userId: session.userId,
-    ...newSession,
-  });
+  session.accessToken = newSessionData.accessToken;
+  session.refreshToken = newSessionData.refreshToken;
+  session.accessTokenValidUntil = newSessionData.accessTokenValidUntil;
+  session.refreshTokenValidUntil = newSessionData.refreshTokenValidUntil;
+  session.updatedAt = new Date();
 
-  await Sessions.deleteOne({ _id: sessionId, refreshToken });
+  await session.save(); // ✅ Зберігаємо зміни
 
-  return createdSession;
+  return session; // ✅ Повертаємо оновлену сесію
 };
 
 const requestResetToken = async (email) => {

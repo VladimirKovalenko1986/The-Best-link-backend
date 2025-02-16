@@ -103,39 +103,43 @@ const logoutUserController = async (req, res) => {
 };
 
 const refreshUserSessionController = async (req, res) => {
-  const { refreshToken } = req.cookies; // ✅ Отримуємо `refreshToken` з cookies
+  const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
     return res.status(401).json({ message: 'Refresh token missing' });
   }
 
-  const session = await refreshUsersSession({
-    sessionId: req.cookies.sessionId,
-    refreshToken,
-  });
+  try {
+    const session = await refreshUsersSession({
+      sessionId: req.cookies.sessionId,
+      refreshToken,
+    });
 
-  if (!session) {
-    return res
-      .status(401)
-      .json({ message: 'Invalid session or refresh token' });
+    if (!session) {
+      return res
+        .status(401)
+        .json({ message: 'Invalid session or refresh token' });
+    }
+
+    const user = await User.findById(session.userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    setupSession(res, session); // ✅ Оновлюємо cookies
+
+    res.json({
+      status: 200,
+      message: 'Successfully refreshed session!',
+      data: {
+        accessToken: session.accessToken, // ✅ Відправляємо оновлений accessToken
+        user,
+      },
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
   }
-
-  const user = await User.findById(session.userId).select('-password');
-
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  setupSession(res, session); // Оновлюємо cookies
-
-  res.json({
-    status: 200,
-    message: 'Successfully refreshed session!',
-    data: {
-      accessToken: session.accessToken,
-      user,
-    },
-  });
 };
 
 const requestResetEmailController = async (req, res) => {
