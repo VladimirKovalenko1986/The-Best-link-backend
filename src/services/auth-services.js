@@ -59,7 +59,7 @@ const loginUser = async (payload) => {
 };
 
 const logoutUser = async (sessionId) => {
-  const result = await Sessions.deleteOne({ _id: sessionId });
+  const result = await Sessions.deleteMany({ _id: sessionId });
 
   if (result.deletedCount === 0) {
     throw createHttpError(401, 'Session not found');
