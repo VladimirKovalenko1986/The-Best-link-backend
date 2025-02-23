@@ -4,7 +4,7 @@ import { SORT_ORDER } from '../constants/index.js';
 
 const getAllLinks = async ({
   page = 1,
-  perPage = 10,
+  perPage = 5,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
