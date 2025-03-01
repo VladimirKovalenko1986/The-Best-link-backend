@@ -114,21 +114,19 @@ const requestResetToken = async (email) => {
       expiresIn: '15m',
     },
   );
-
+  // 📩 Генеруємо HTML-лист з шаблону
   const resetPasswordTemplePath = path.join(
     TEMPLATES_DIR,
     'reset-password-email.html',
   );
-
   const templateSource = (
     await fs.readFile(resetPasswordTemplePath)
   ).toString();
-
   // Другий варіант
   //   await fs.readFile(resetPasswordTemplePath, 'utf-8');
-
   const template = handlebars.compile(templateSource);
 
+  // 📬 Відправляємо лист
   const html = template({
     name: user.name,
     link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
@@ -140,6 +138,7 @@ const requestResetToken = async (email) => {
     subject: 'Reset your password',
     html,
   });
+  return { message: 'Reset email sent' };
 };
 
 const resetPassword = async (payload) => {
@@ -160,8 +159,10 @@ const resetPassword = async (payload) => {
     throw createHttpError(404, 'User not found');
   }
 
+  // 🔑 Хешуємо новий пароль
   const encriptedPassword = await bcrypt.hash(payload.password, 10);
 
+  // 🛠 Оновлюємо пароль у базі даних
   await User.updateOne({ _id: user._id }, { password: encriptedPassword });
 };
 
