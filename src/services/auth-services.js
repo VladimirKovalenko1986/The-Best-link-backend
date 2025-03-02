@@ -129,7 +129,7 @@ const requestResetToken = async (email) => {
   // 📬 Відправляємо лист
   const html = template({
     name: user.name,
-    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
+    link: `${env('APP_FRONTEND')}/reset-password?token=${resetToken}`,
   });
 
   await sendEmail({
