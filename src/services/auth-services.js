@@ -170,11 +170,9 @@ const loginOrSignupWithGoogle = async (code) => {
   const loginTicket = await validateCode(code);
   const payload = loginTicket.getPayload();
 
-  if (!payload) throw createHttpError(401);
+  if (!payload) throw createHttpError(401, 'Invalid Google OAuth token');
 
-  let user = await User.findOne({
-    email: payload.email,
-  });
+  let user = await User.findOne({ email: payload.email });
 
   if (!user) {
     const password = await bcrypt.hash(randomBytes(10), 10);
@@ -186,11 +184,12 @@ const loginOrSignupWithGoogle = async (code) => {
   }
 
   const newSession = createSession();
-
-  return await Sessions.create({
+  const session = await Sessions.create({
     userId: user._id,
     ...newSession,
   });
+
+  return { user, session }; // ✅ Тепер повертаємо об'єкт { user, session }
 };
 
 export {

@@ -172,13 +172,19 @@ const getGoogleOAuthUrlController = async (req, res) => {
 };
 
 const loginWithGoogleController = async (req, res) => {
-  const session = await loginOrSignupWithGoogle(req.body.code);
+  const { user, session } = await loginOrSignupWithGoogle(req.body.code);
+
+  if (!session) {
+    return res.status(401).json({ message: 'Google login failed' });
+  }
+
   setupSession(res, session);
 
   res.json({
     status: 200,
     message: 'Successfully logged in via Google OAuth!',
     data: {
+      user,
       accessToken: session.accessToken,
     },
   });
