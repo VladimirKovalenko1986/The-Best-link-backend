@@ -189,7 +189,7 @@ const loginOrSignupWithGoogle = async (code) => {
     ...newSession,
   });
 
-  return { user, session }; // ✅ Тепер повертаємо об'єкт { user, session }
+  return { user, session };
 };
 
 export {
