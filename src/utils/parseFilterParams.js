@@ -5,7 +5,18 @@ const parseNameType = (nameType) => {
     return;
   }
   const isNameType = (nameType) =>
-    ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js'].includes(nameType);
+    [
+      'HTML&CSS',
+      'JS',
+      'React',
+      'TS',
+      'Node.js',
+      'Video/HTML&CSS',
+      'Video/JS',
+      'Video/React',
+      'Video/TS',
+      'Video/Node.js',
+    ].includes(nameType);
 
   if (isNameType(nameType)) {
     return nameType;

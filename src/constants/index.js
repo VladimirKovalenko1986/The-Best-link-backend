@@ -5,7 +5,18 @@ const SORT_ORDER = {
   DESC: 'desc',
 };
 
-const nameType = ['HTML&CSS', 'JS', 'React', 'TS', 'Node.js'];
+const nameType = [
+  'HTML&CSS',
+  'JS',
+  'React',
+  'TS',
+  'Node.js',
+  'Video/HTML&CSS',
+  'Video/JS',
+  'Video/React',
+  'Video/TS',
+  'Video/Node.js',
+];
 
 const authEmailFormate = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
