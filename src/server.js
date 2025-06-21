@@ -21,6 +21,7 @@ const startServer = () => {
         'http://localhost:5173',
         'https://the-best-link-frontend.onrender.com',
         'https://the-best-link-frontend.vercel.app',
+        'https://the-best-link-frontend-ts-mn55.vercel.app/login',
       ], // ✅ Дозволяє фронт
       credentials: true, // ✅ Дозволяє передавати куки
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Дозволені методи
